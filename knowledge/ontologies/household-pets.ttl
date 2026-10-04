@@ -1,0 +1,934 @@
+@prefix pets: <https://example.org/ontology/pets#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+pets: a owl:Ontology ;
+    rdfs:label "Household companion animals" ;
+    rdfs:comment "Named pets plus species, breeds, cat coat color/pattern, and methods of capturing attention for maximum affection. Age and sex are recorded only when asserted for an individual. Species co-mingling is not modeled. Housing footnote: the named animals share the household except the rabbits (Q, Jules), who have their own room. Named animals have asserted solicitsAffectionUsing and prefersAffectionVia links." .
+
+pets:CompanionAnimal a owl:Class ;
+    rdfs:label "Companion animal" ;
+    rdfs:comment "An animal kept as a companion in the household." .
+
+pets:Dog a owl:Class ;
+    rdfs:subClassOf pets:CompanionAnimal ;
+    rdfs:label "Dog" ;
+    rdfs:comment "A domestic dog (Canis familiaris)." .
+
+pets:Cat a owl:Class ;
+    rdfs:subClassOf pets:CompanionAnimal ;
+    rdfs:label "Cat" ;
+    rdfs:comment "A domestic cat (Felis catus). Breed is not asserted for the named cats in this corpus." .
+
+pets:Rabbit a owl:Class ;
+    rdfs:subClassOf pets:CompanionAnimal ;
+    rdfs:label "Rabbit" ;
+    rdfs:comment "A domestic rabbit." .
+
+pets:FlatCoatedRetriever a owl:Class ;
+    rdfs:subClassOf pets:Dog ;
+    rdfs:label "Flat-Coated Retriever" ;
+    rdfs:comment "A gundog breed with a flat, dense coat." .
+
+pets:DutchRabbit a owl:Class ;
+    rdfs:subClassOf pets:Rabbit ;
+    rdfs:label "Dutch rabbit" ;
+    rdfs:comment "A rabbit breed typically marked with a white blaze and saddle and colored cheeks and hindquarters." .
+
+pets:RexRabbit a owl:Class ;
+    rdfs:subClassOf pets:Rabbit ;
+    rdfs:label "Rex rabbit" ;
+    rdfs:comment "A rabbit breed known for a short, plush rex coat." .
+
+pets:CoatColor a owl:Class ;
+    rdfs:label "Coat color" ;
+    rdfs:comment "A named coat color." .
+
+pets:CoatPattern a owl:Class ;
+    rdfs:label "Coat pattern" ;
+    rdfs:comment "A named distribution of color on the coat (not a breed)." .
+
+pets:hasCoatColor a owl:ObjectProperty ;
+    rdfs:label "has coat color" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:CoatColor ;
+    rdfs:comment "Associates an animal with a coat color. An animal may have more than one." .
+
+pets:hasCoatPattern a owl:ObjectProperty ;
+    rdfs:label "has coat pattern" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:CoatPattern ;
+    rdfs:comment "Associates an animal with a coat pattern such as calico or cow (bicolor)." .
+
+pets:Sex a owl:Class ;
+    rdfs:label "Sex" ;
+    rdfs:comment "Sex of a companion animal, recorded only when asserted." .
+
+pets:Female a pets:Sex ;
+    rdfs:label "Female" .
+
+pets:Male a pets:Sex ;
+    rdfs:label "Male" .
+
+pets:hasSex a owl:ObjectProperty ;
+    rdfs:label "has sex" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Sex .
+
+pets:hasAgeInYears a owl:DatatypeProperty ;
+    rdfs:label "has age in years" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Age in years, recorded only when asserted." .
+
+pets:hasPreferredFeedingHour a owl:DatatypeProperty ;
+    rdfs:label "has preferred feeding hour" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "Preferred meal hour in local 24-hour time (e.g. 18 for 6pm)." .
+
+pets:hasMinimumWarmUpHours a owl:DatatypeProperty ;
+    rdfs:label "has minimum warm-up hours" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Typical minimum hours this animal needs to warm up to a person, unless acceleratesWarmUpUsing applies." .
+
+pets:hasMaximumWarmUpHours a owl:DatatypeProperty ;
+    rdfs:label "has maximum warm-up hours" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:decimal ;
+    rdfs:comment "Typical maximum hours this animal needs to warm up to a stranger or new person." .
+
+pets:Treat a owl:Class ;
+    rdfs:label "Treat" ;
+    rdfs:comment "A food item used to capture attention or reward." .
+
+pets:TemptationsTreat a pets:Treat ;
+    rdfs:label "Temptations" ;
+    rdfs:comment "Temptations brand cat treats. Favored by Salem and Stevie; shaking the tub speeds Salem's warm-up with people." .
+
+pets:Food a owl:Class ;
+    rdfs:label "Food" ;
+    rdfs:comment "A meal food, distinct from a treat." .
+
+pets:AussieWetFood a pets:Food ;
+    rdfs:label "Aussie wet food" ;
+    rdfs:comment "Aussie brand wet food. Favored by Stevie and Lilo. Lilo's primary affection motivation." .
+
+pets:Chicken a pets:Food ;
+    rdfs:label "Chicken" ;
+    rdfs:comment "Chicken as food. Asserted as something Lilo strongly loves." .
+
+pets:HouseholdWetFood a pets:Food ;
+    rdfs:label "Wet food" ;
+    rdfs:comment "Household wet food (unspecified brand). Asserted as a primary motivation for Vader." .
+
+pets:DryFood a pets:Food ;
+    rdfs:label "Dry food" ;
+    rdfs:comment "Dry food. Asserted as something Q loves." .
+
+pets:HouseholdTreats a pets:Treat ;
+    rdfs:label "Treats" ;
+    rdfs:comment "Treats in general. Asserted as a primary motivation for Vader." .
+
+pets:hasLowMotivationFor a owl:ObjectProperty ;
+    rdfs:label "has low motivation for" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:comment "The animal is not strongly motivated by this treat or food, relative to their favorites." .
+
+pets:willAccept a owl:ObjectProperty ;
+    rdfs:label "will accept" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:comment "The animal will take this item even if it is not a primary motivation." .
+
+pets:hasFavoredFood a owl:ObjectProperty ;
+    rdfs:label "has favored food" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Food .
+
+pets:Temperament a owl:Class ;
+    rdfs:label "Temperament" ;
+    rdfs:comment "A standing behavioral trait." .
+
+pets:hasTemperament a owl:ObjectProperty ;
+    rdfs:label "has temperament" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Temperament .
+
+pets:Energetic a pets:Temperament ;
+    rdfs:label "Energetic" .
+
+pets:Playful a pets:Temperament ;
+    rdfs:label "Playful" .
+
+pets:ExtremelyShyWithStrangers a pets:Temperament ;
+    rdfs:label "Extremely shy with strangers" ;
+    rdfs:comment "Very wary of unfamiliar people." .
+
+pets:OvertlyAffectionate a pets:Temperament ;
+    rdfs:label "Overtly affectionate" ;
+    rdfs:comment "Gives and demands affection so strongly that a person may need a protocol to end the session." .
+
+pets:DemandingOfPets a pets:Temperament ;
+    rdfs:label "Demanding of pets" ;
+    rdfs:comment "Will keep requesting pets after a person wants to stop." .
+
+pets:Fun a pets:Temperament ;
+    rdfs:label "Fun" .
+
+pets:Loving a pets:Temperament ;
+    rdfs:label "Loving" .
+
+pets:LovesPeopleImmediately a pets:Temperament ;
+    rdfs:label "Loves people immediately" ;
+    rdfs:comment "Warms up to people at once; no long stranger delay." .
+
+pets:NotAggressive a pets:Temperament ;
+    rdfs:label "Not aggressive" ;
+    rdfs:comment "Not an aggressive animal." .
+
+pets:UnawareOfOwnSize a pets:Temperament ;
+    rdfs:label "Unaware of own size" ;
+    rdfs:comment "Does not act as if they realize how large they are." .
+
+pets:NervousAroundOtherDogs a pets:Temperament ;
+    rdfs:label "Nervous around other dogs" ;
+    rdfs:comment "Unsure how to act or how other dogs will react; cautious until comfortable, still observantly anxious." .
+
+pets:SketchedOutByLargeVehicles a pets:Temperament ;
+    rdfs:label "Sketched out by large vehicles" ;
+    rdfs:comment "Unsettled by large vehicles." .
+
+pets:Confident a pets:Temperament ;
+    rdfs:label "Confident" .
+
+pets:ShyAtFirst a pets:Temperament ;
+    rdfs:label "Shy at first" ;
+    rdfs:comment "Nervous and shy initially, then more open." .
+
+pets:RequiresConsentForTouch a pets:Temperament ;
+    rdfs:label "Requires consent for touch" ;
+    rdfs:comment "Does not love being touched unless they have invited it." .
+
+pets:Affectionate a pets:Temperament ;
+    rdfs:label "Affectionate" .
+
+pets:Warm a pets:Temperament ;
+    rdfs:label "Warm" .
+
+pets:Hungry a pets:Temperament ;
+    rdfs:label "Hungry" ;
+    rdfs:comment "Often food-focused; loves to eat." .
+
+pets:PrimarilyFoodMotivated a pets:Temperament ;
+    rdfs:label "Primarily food motivated" .
+
+pets:Stimulus a owl:Class ;
+    rdfs:label "Stimulus" ;
+    rdfs:comment "Something in the environment that can unsettle or interest an animal." .
+
+pets:isNervousAround a owl:ObjectProperty ;
+    rdfs:label "is nervous around" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Stimulus .
+
+pets:LargeVehicles a pets:Stimulus ;
+    rdfs:label "Large vehicles" .
+
+pets:OtherDogs a pets:Stimulus ;
+    rdfs:label "Other dogs" .
+
+pets:Stairs a pets:Stimulus ;
+    rdfs:label "Stairs" ;
+    rdfs:comment "Staircases. Asserted as something Q is not a big fan of." .
+
+pets:Place a owl:Class ;
+    rdfs:label "Place" ;
+    rdfs:comment "A location an animal may enjoy or avoid." .
+
+pets:enjoysPlace a owl:ObjectProperty ;
+    rdfs:label "enjoys place" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Place .
+
+pets:SunnyWindowsill a pets:Place ;
+    rdfs:label "Sunny windowsill" ;
+    rdfs:comment "A sunlit windowsill. Asserted as a place Q loves." .
+
+pets:requestsMealUsing a owl:ObjectProperty ;
+    rdfs:label "requests meal using" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionForAffectionMethod ;
+    rdfs:comment "How the animal captures attention when a preferred meal time is missed or late." .
+
+pets:hasFavoredTreat a owl:ObjectProperty ;
+    rdfs:label "has favored treat" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Treat .
+
+pets:acceleratesWarmUpUsing a owl:ObjectProperty ;
+    rdfs:label "accelerates warm-up using" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionForAffectionMethod ;
+    rdfs:comment "This method shortens the animal's usual warm-up time with people." .
+
+pets:ShakingTreatTub a pets:AttentionForAffectionMethod ;
+    rdfs:label "Shaking a treat tub" ;
+    rdfs:comment "Shaking a tub of treats to capture attention and speed social warm-up." .
+
+pets:Orange a pets:CoatColor ;
+    rdfs:label "Orange" ;
+    rdfs:comment "Orange (red) coat color." .
+
+pets:Black a pets:CoatColor ;
+    rdfs:label "Black" ;
+    rdfs:comment "Black coat color." .
+
+pets:White a pets:CoatColor ;
+    rdfs:label "White" ;
+    rdfs:comment "White coat color." .
+
+pets:CalicoPattern a pets:CoatPattern ;
+    rdfs:label "Calico" ;
+    rdfs:comment "A tri-color coat pattern, typically patches of orange, black, and white. Not a breed." .
+
+pets:CowPattern a pets:CoatPattern ;
+    rdfs:label "Cow cat" ;
+    rdfs:comment "A black-and-white bicolor coat pattern, informally called a cow cat. Not a breed." .
+
+# --- attention for affection ---
+
+pets:AttentionForAffectionMethod a owl:Class ;
+    rdfs:label "Attention-for-affection method" ;
+    rdfs:comment "A way of capturing attention whose intended outcome is maximum affection. May be initiated by the animal or by a person." .
+
+pets:solicitsAffectionUsing a owl:ObjectProperty ;
+    rdfs:label "solicits affection using" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionForAffectionMethod ;
+    rdfs:comment "The animal uses this method to capture a person's attention in order to receive affection." .
+
+pets:prefersAffectionVia a owl:ObjectProperty ;
+    rdfs:label "prefers affection via" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionForAffectionMethod ;
+    rdfs:comment "A person is most likely to get this animal's attention and give affection successfully by using this method." .
+
+pets:AntiBid a owl:Class ;
+    rdfs:label "Anti-bid" ;
+    rdfs:comment "A cue that means do not start contact, stop contact, or the animal is protesting. Distinct from an affection bid." .
+
+pets:hasAntiBid a owl:ObjectProperty ;
+    rdfs:label "has anti-bid" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AntiBid ;
+    rdfs:comment "An anti-bid or protest this animal is known for." .
+
+pets:antiBidTriggeredBy a owl:ObjectProperty ;
+    rdfs:label "anti-bid triggered by" ;
+    rdfs:domain pets:AntiBid ;
+    rdfs:comment "A human or household action that tends to produce this anti-bid." .
+
+pets:UninvitedTouch a pets:AntiBid ;
+    rdfs:label "Uninvited touch" ;
+    rdfs:comment "Contact the animal did not invite. Asserted for Q (all touch until he invites) and Jules." .
+
+pets:ApproachingDuringWarmUp a pets:AntiBid ;
+    rdfs:label "Approaching during warm-up" ;
+    rdfs:comment "Pushing for contact before the animal's warm-up window. Asserted for Salem (about six hours unless Temptations tub is shaken)." .
+
+pets:ForcedApproachWhileShy a pets:AntiBid ;
+    rdfs:label "Forced approach while shy" ;
+    rdfs:comment "Coming in fast or forcing contact while the animal is extremely shy with strangers. Asserted for Stevie." .
+
+pets:CrowdingWhileDistant a pets:AntiBid ;
+    rdfs:label "Crowding while distant" ;
+    rdfs:comment "Closing distance when the animal is sitting apart as their preferred posture. Asserted for Lilo." .
+
+pets:AffectionWithdrawnEarly a pets:AntiBid ;
+    rdfs:label "Affection withdrawn early" ;
+    rdfs:comment "A person gave a lot of pets then stopped before the animal was ready. Asserted as Alfred's escalation trigger (claw, bite, heavy body, desperate clawing)." .
+
+pets:FoodBlockingOfCagemate a pets:AntiBid ;
+    rdfs:label "Food blocking of cagemate" ;
+    rdfs:comment "Blocking another animal from food or stealing their treats. Asserted of Jules toward Q; Q is sometimes upset." .
+
+pets:ReachingForFoodMidMeal a pets:AntiBid ;
+    rdfs:label "Reaching for food mid-meal" ;
+    rdfs:comment "A person reaching toward this animal's food or treats while they are eating. Asserted for Vader." .
+
+pets:CatsNearFood a pets:AntiBid ;
+    rdfs:label "Cats near food" ;
+    rdfs:comment "Cats approaching this animal's food. Asserted that Vader will growl." .
+
+pets:BeingPickedUp a pets:AntiBid ;
+    rdfs:label "Being picked up" ;
+    rdfs:comment "Lifting the animal off the ground. Asserted as an anti-bid for Vader and for the rabbits except a vet emergency (Jules: also if a skilled handler can keep her fully supported)." .
+
+pets:BeingScruffed a pets:AntiBid ;
+    rdfs:label "Being scruffed" ;
+    rdfs:comment "Scruffing. Do not scruff the rabbits except a vet emergency." .
+
+pets:VentralBellyTouch a pets:AntiBid ;
+    rdfs:label "Ventral belly touch" ;
+    rdfs:comment "Uninvited or full-belly handling. Asserted for Jules. Distinct from invited gentle side-belly kneading while her feet are out." .
+
+pets:FeetTuckedMeansStop a pets:AntiBid ;
+    rdfs:label "Feet tucked means stop" ;
+    rdfs:comment "Jules: feet sticking out means continue; tucking the feet in means stop pets." .
+
+pets:WarningSignal a owl:Class ;
+    rdfs:label "Warning signal" ;
+    rdfs:comment "A precursor cue that contact should pause. Household-wide for named companions: tail lash/thump, ears back, freeze, walk or hop away, growl/hiss/honk, overstimulation bite." .
+
+pets:showsWarning a owl:ObjectProperty ;
+    rdfs:label "shows warning" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:WarningSignal .
+
+pets:TailLash a pets:WarningSignal ;
+    rdfs:label "Tail lash or thump" .
+
+pets:EarsBack a pets:WarningSignal ;
+    rdfs:label "Ears back" .
+
+pets:Freeze a pets:WarningSignal ;
+    rdfs:label "Freeze" .
+
+pets:WalkAway a pets:WarningSignal ;
+    rdfs:label "Walk or hop away" .
+
+pets:GrowlHiss a pets:WarningSignal ;
+    rdfs:label "Growl, hiss, or honk" ;
+    rdfs:comment "Asserted: Vader growls if cats go near his food." .
+
+pets:OverstimulationBite a pets:WarningSignal ;
+    rdfs:label "Bite from overstimulation" ;
+    rdfs:comment "A bite that means stop; overstimulation. Asserted in connection with Alfred's protest pattern." .
+
+pets:RecoveryMethod a owl:Class ;
+    rdfs:label "Recovery method" ;
+    rdfs:comment "What to do after an anti-bid so the animal can reset." .
+
+pets:recoversVia a owl:ObjectProperty ;
+    rdfs:label "recovers via" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:RecoveryMethod .
+
+pets:GivingSpace a pets:RecoveryMethod ;
+    rdfs:label "Giving space" ;
+    rdfs:comment "Step back or leave the room." .
+
+pets:OfferingTreatAfterProtest a pets:RecoveryMethod ;
+    rdfs:label "Offering a treat after protest" .
+
+pets:QuietSitNoReach a pets:RecoveryMethod ;
+    rdfs:label "Quiet sit, no reaching" .
+
+pets:pickupPermittedWhen a owl:ObjectProperty ;
+    rdfs:label "pickup permitted when" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:HandlingException ;
+    rdfs:comment "Narrow exceptions to BeingPickedUp." .
+
+pets:HandlingException a owl:Class ;
+    rdfs:label "Handling exception" .
+
+pets:VetEmergency a pets:HandlingException ;
+    rdfs:label "Vet emergency" .
+
+pets:SkilledSupportedRabbitHandling a pets:HandlingException ;
+    rdfs:label "Skilled supported rabbit handling" ;
+    rdfs:comment "Handler is confident and can keep the rabbit fully supported. Asserted as a Jules exception, not a casual pickup." .
+
+pets:Vocalizing a pets:AttentionForAffectionMethod ;
+    rdfs:label "Vocalizing" ;
+    rdfs:comment "Using voice (bark, meow, honk, cluck) to capture attention for affection." .
+
+pets:Nudging a pets:AttentionForAffectionMethod ;
+    rdfs:label "Nudging" ;
+    rdfs:comment "Pushing the head or body against a person to capture attention for affection." .
+
+pets:Pawing a pets:AttentionForAffectionMethod ;
+    rdfs:label "Pawing" ;
+    rdfs:comment "Using a paw or forefoot on a person or nearby surface to capture attention for affection." .
+
+pets:Leaning a pets:AttentionForAffectionMethod ;
+    rdfs:label "Leaning" ;
+    rdfs:comment "Leaning body weight against a person to capture attention for affection." .
+
+pets:Following a pets:AttentionForAffectionMethod ;
+    rdfs:label "Following" ;
+    rdfs:comment "Staying with or trailing a person to keep attention available for affection." .
+
+pets:OccupyingLap a pets:AttentionForAffectionMethod ;
+    rdfs:label "Occupying lap" ;
+    rdfs:comment "Sitting or lying on a person's lap to capture attention and receive affection." .
+
+pets:PresentingBelly a pets:AttentionForAffectionMethod ;
+    rdfs:label "Presenting belly" ;
+    rdfs:comment "Exposing the underside to invite attention and affection (acceptance varies by individual)." .
+
+pets:BringingObject a pets:AttentionForAffectionMethod ;
+    rdfs:label "Bringing an object" ;
+    rdfs:comment "Delivering a toy or other object to capture attention for interaction and affection." .
+
+pets:DirectGaze a pets:AttentionForAffectionMethod ;
+    rdfs:label "Direct gaze" ;
+    rdfs:comment "Looking at a person to capture attention for affection." .
+
+pets:SlowBlink a pets:AttentionForAffectionMethod ;
+    rdfs:label "Slow blink" ;
+    rdfs:comment "A relaxed, slow blink used to capture or return affiliative attention, especially with cats." .
+
+pets:SittingClose a pets:AttentionForAffectionMethod ;
+    rdfs:label "Sitting close" ;
+    rdfs:comment "Settling nearby without contact to keep attention available for affection." .
+
+pets:ChinPresenting a pets:AttentionForAffectionMethod ;
+    rdfs:label "Chin presenting" ;
+    rdfs:comment "Offering the chin or cheeks for scritches as a bid for affection." .
+
+pets:Flopping a pets:AttentionForAffectionMethod ;
+    rdfs:label "Flopping" ;
+    rdfs:comment "A sudden side-flop or stretch-out that captures attention and can invite calm affection, often in rabbits." .
+
+pets:Loafing a pets:AttentionForAffectionMethod ;
+    rdfs:label "Loafing" ;
+    rdfs:comment "Tucking the feet under the body in a loaf pose; with eye contact and teeth chittering can be a bid for pets." .
+
+pets:TeethChittering a pets:AttentionForAffectionMethod ;
+    rdfs:label "Teeth chittering" ;
+    rdfs:comment "Softly chattering or grinding teeth as an affiliative bid, often while loafing and making eye contact." .
+
+pets:FeetStickingOut a pets:AttentionForAffectionMethod ;
+    rdfs:label "Feet sticking out" ;
+    rdfs:comment "Resting with hind feet stretched out; a contentment posture. Asserted as when Jules is most content." .
+
+pets:HeadRub a pets:AttentionForAffectionMethod ;
+    rdfs:label "Head rub" ;
+    rdfs:comment "Rubs on the head." .
+
+pets:NeckRub a pets:AttentionForAffectionMethod ;
+    rdfs:label "Neck rub" ;
+    rdfs:comment "Rubs on the neck." .
+
+pets:ShoulderRub a pets:AttentionForAffectionMethod ;
+    rdfs:label "Shoulder rub" ;
+    rdfs:comment "Rubs on the shoulders." .
+
+pets:GentleBackKneading a pets:AttentionForAffectionMethod ;
+    rdfs:label "Gentle back kneading" ;
+    rdfs:comment "Gentle kneading along the back." .
+
+pets:GentleSideBellyKneading a pets:AttentionForAffectionMethod ;
+    rdfs:label "Gentle side-belly kneading" ;
+    rdfs:comment "Gentle kneading on the side of the belly." .
+
+pets:blocksFromEating a owl:ObjectProperty ;
+    rdfs:label "blocks from eating" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:CompanionAnimal ;
+    rdfs:comment "Tries to keep another animal from accessing food." .
+
+pets:stealsTreatsFrom a owl:ObjectProperty ;
+    rdfs:label "steals treats from" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:CompanionAnimal .
+
+pets:isSometimesUpsetBy a owl:ObjectProperty ;
+    rdfs:label "is sometimes upset by" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:CompanionAnimal ;
+    rdfs:comment "Is sometimes upset by the other animal's actions (e.g. food blocking or treat stealing)." .
+
+pets:Circling a pets:AttentionForAffectionMethod ;
+    rdfs:label "Circling" ;
+    rdfs:comment "Circling a person's feet or legs to capture attention for affection." .
+
+pets:GettingOnTheirLevel a pets:AttentionForAffectionMethod ;
+    rdfs:label "Getting on their level" ;
+    rdfs:comment "A person sits or kneels to the animal's height to capture attention for maximum affection." .
+
+pets:QuietApproach a pets:AttentionForAffectionMethod ;
+    rdfs:label "Quiet approach" ;
+    rdfs:comment "A person approaches slowly and with little noise so the animal will accept attention and affection." .
+
+pets:PreferredSpotScratch a pets:AttentionForAffectionMethod ;
+    rdfs:label "Preferred-spot scratch" ;
+    rdfs:comment "A person scratches a favored spot (e.g. chest, chin, base of ears) to capture attention and maximize affection." .
+
+pets:OfferingTreat a pets:AttentionForAffectionMethod ;
+    rdfs:label "Offering a treat" ;
+    rdfs:comment "Using food to capture attention as a prelude to affection; not a substitute for the affection itself." .
+
+pets:Clawing a pets:AttentionForAffectionMethod ;
+    rdfs:label "Clawing" ;
+    rdfs:comment "Using claws on a person as an aggressive bid to capture attention for affection." .
+
+pets:GentleBiting a pets:AttentionForAffectionMethod ;
+    rdfs:label "Gentle biting" ;
+    rdfs:comment "A light or inhibited bite used as a bid to capture attention for affection." .
+
+pets:VigorousPetting a pets:AttentionForAffectionMethod ;
+    rdfs:label "Vigorous petting" ;
+    rdfs:comment "A person uses firm, energetic petting (aggressive pets) to give affection." .
+
+pets:SprawlingOnLap a pets:AttentionForAffectionMethod ;
+    rdfs:label "Sprawling on lap" ;
+    rdfs:comment "Fully stretching or sprawling across a person's lap to capture attention for affection, beyond merely sitting." .
+
+pets:VigorousBellyRub a pets:AttentionForAffectionMethod ;
+    rdfs:label "Vigorous belly rub" ;
+    rdfs:comment "Firm, energetic rubbing of the belly." .
+
+pets:LightChinScratch a pets:AttentionForAffectionMethod ;
+    rdfs:label "Light chin scratch" ;
+    rdfs:comment "Gentle scratching under the chin." .
+
+pets:LightCheekScratch a pets:AttentionForAffectionMethod ;
+    rdfs:label "Light cheek scratch" ;
+    rdfs:comment "Gentle scratching of the cheeks." .
+
+# --- outing requests and toys ---
+
+pets:Toy a owl:Class ;
+    rdfs:label "Toy" ;
+    rdfs:comment "An object used in play or to signal a request." .
+
+pets:OutingRequestMethod a owl:Class ;
+    rdfs:label "Outing-request method" ;
+    rdfs:comment "A way of capturing a person's attention in order to go outside. Distinct from affection bids." .
+
+pets:hasFavoriteToy a owl:ObjectProperty ;
+    rdfs:label "has favorite toy" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Toy ;
+    rdfs:comment "The toy this animal prefers." .
+
+pets:requestsGoingOutsideUsing a owl:ObjectProperty ;
+    rdfs:label "requests going outside using" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:OutingRequestMethod ;
+    rdfs:comment "The animal uses this method to capture attention when he or she wants to go outside." .
+
+pets:BringingToyToGoOutside a pets:OutingRequestMethod ;
+    rdfs:label "Bringing a toy to go outside" ;
+    rdfs:comment "Bringing a toy to a person to capture attention because the animal wants to go outside." .
+
+pets:HalloweenCatToy a pets:Toy ;
+    rdfs:label "Halloween cat toy" ;
+    rdfs:comment "A short, round Halloween cat toy. Asserted as Vader's favorite toy." .
+
+pets:FeatherWandToy a pets:Toy ;
+    rdfs:label "Feather wand" ;
+    rdfs:comment "A feather wand toy. Asserted as one of Salem's biggest motivations." .
+
+pets:hasPrimaryMotivation a owl:ObjectProperty ;
+    rdfs:label "has primary motivation" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:comment "A strongest day-to-day motivation (toy or treat). Asserted only when stated." .
+
+pets:Retreat a owl:Class ;
+    rdfs:label "Retreat" ;
+    rdfs:comment "A place an animal withdraws to." .
+
+pets:hasRetreat a owl:ObjectProperty ;
+    rdfs:label "has retreat" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Retreat .
+
+pets:isAffectionateUponLeaving a owl:ObjectProperty ;
+    rdfs:label "is affectionate upon leaving" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Retreat ;
+    rdfs:comment "The animal is warm and affectionate after coming out of this retreat." .
+
+pets:SalemsBatCave a pets:Retreat ;
+    rdfs:label "Bat cave" ;
+    rdfs:comment "Salem's retreat. She is warm and affectionate when she comes out of it." .
+
+pets:PlayActivity a owl:Class ;
+    rdfs:label "Play activity" ;
+    rdfs:comment "A play or climbing activity an animal is known to do." .
+
+pets:enjoysPlayActivity a owl:ObjectProperty ;
+    rdfs:label "enjoys play activity" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:PlayActivity .
+
+pets:ScalingChristmasTrees a pets:PlayActivity ;
+    rdfs:label "Scaling Christmas trees" ;
+    rdfs:comment "Climbing up a Christmas tree. Asserted of Salem." .
+
+pets:SwingingOnCatTreePole a pets:PlayActivity ;
+    rdfs:label "Swinging on the cat-tree pole" ;
+    rdfs:comment "Swinging around the pole of a cat tree. Asserted as something Salem loves." .
+
+pets:Walking a pets:PlayActivity ;
+    rdfs:label "Walks" ;
+    rdfs:comment "Going on walks. Asserted as something Vader loves." .
+
+pets:BackyardRunning a pets:PlayActivity ;
+    rdfs:label "Running around the backyard" ;
+    rdfs:comment "Running in the backyard. Asserted as something Vader loves." .
+
+pets:BackyardBellyRubs a pets:PlayActivity ;
+    rdfs:label "Backyard belly rubs" ;
+    rdfs:comment "Lying in the backyard while getting belly rubs. Asserted as something Vader loves." .
+
+pets:CalledHandsomeBoy a pets:AttentionForAffectionMethod ;
+    rdfs:label "Being called a handsome boy" ;
+    rdfs:comment "A person calls him a handsome boy. Asserted as something Vader loves." .
+
+pets:PlayRequestMethod a owl:Class ;
+    rdfs:label "Play-request method" ;
+    rdfs:comment "A way of capturing a person's attention in order to play." .
+
+pets:requestsPlayUsing a owl:ObjectProperty ;
+    rdfs:label "requests play using" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:PlayRequestMethod .
+
+pets:BringingToyToPlay a pets:PlayRequestMethod ;
+    rdfs:label "Bringing a toy to play" ;
+    rdfs:comment "Dragging or bringing a toy to a person because the animal wants to play." .
+
+pets:SteviesFeatherWand a pets:Toy ;
+    rdfs:label "Stevie's feather wand" ;
+    rdfs:comment "Stevie's feather wand toy. She drags it to a person when she wants to play." .
+
+pets:Fabric a owl:Class ;
+    rdfs:label "Fabric" .
+
+pets:Fleece a pets:Fabric ;
+    rdfs:label "Fleece" ;
+    rdfs:comment "Fleece fabric. Asserted as Stevie's favorite." .
+
+pets:hasFavoriteFabric a owl:ObjectProperty ;
+    rdfs:label "has favorite fabric" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:Fabric .
+
+pets:ComfortItem a owl:Class ;
+    rdfs:label "Comfort item" ;
+    rdfs:comment "A household item that can make an animal more willing to give affection." .
+
+pets:FleeceBlanket a pets:ComfortItem ;
+    rdfs:label "Fleece blanket" .
+
+pets:FleeceRobe a pets:ComfortItem ;
+    rdfs:label "Fleece robe" .
+
+pets:increasesAffectionWhenPresent a owl:ObjectProperty ;
+    rdfs:label "increases affection when present" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:ComfortItem ;
+    rdfs:comment "The animal is more inclined to be affectionate when this item is handy." .
+
+pets:HavingFleeceHandy a pets:AttentionForAffectionMethod ;
+    rdfs:label "Having fleece handy" ;
+    rdfs:comment "A person has a fleece blanket or robe available, which increases some animals' willingness to give affection." .
+
+pets:SittingAtDistance a pets:AttentionForAffectionMethod ;
+    rdfs:label "Sitting at a distance" ;
+    rdfs:comment "Sitting somewhat apart, possibly awkwardly, rather than close contact." .
+
+pets:HeadBonk a pets:AttentionForAffectionMethod ;
+    rdfs:label "Head bonk" ;
+    rdfs:comment "Bumping the head against a person as a bid for pets." .
+
+pets:HeavyingBody a pets:AttentionForAffectionMethod ;
+    rdfs:label "Heavying the body" ;
+    rdfs:comment "Making the body dead-weight to stay in contact and resist being moved." .
+
+pets:ResistingDisplacement a pets:AttentionForAffectionMethod ;
+    rdfs:label "Resisting displacement" ;
+    rdfs:comment "Bracing or refusing to be relocated when a person wants less contact." .
+
+pets:DesperateClawing a pets:AttentionForAffectionMethod ;
+    rdfs:label "Desperate clawing" ;
+    rdfs:comment "Intense clawing at a person's body to keep or regain contact." .
+
+pets:escalatesWhenAffectionWithdrawnEarly a owl:ObjectProperty ;
+    rdfs:label "escalates when affection withdrawn early" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionForAffectionMethod ;
+    rdfs:comment "Behaviors that appear if a person has been giving a lot of affection and then stops before the animal is ready." .
+
+pets:AttentionCessationMethod a owl:Class ;
+    rdfs:label "Attention-cessation method" ;
+    rdfs:comment "A way a person ends an affection session when the animal is still demanding pets." .
+
+pets:stopsDemandingAttentionVia a owl:ObjectProperty ;
+    rdfs:label "stops demanding attention via" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range pets:AttentionCessationMethod .
+
+pets:hasCessationRepetitionsMin a owl:DatatypeProperty ;
+    rdfs:label "has cessation repetitions min" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:integer .
+
+pets:hasCessationRepetitionsMax a owl:DatatypeProperty ;
+    rdfs:label "has cessation repetitions max" ;
+    rdfs:domain pets:CompanionAnimal ;
+    rdfs:range xsd:integer ;
+    rdfs:comment "How many times a cessation method (e.g. midbody launch) typically must be repeated before the animal stops demanding pets." .
+
+pets:MidbodyLaunchProtocol a pets:AttentionCessationMethod ;
+    rdfs:label "Midbody launch protocol" ;
+    rdfs:comment "Gently unhook claws from fabrics, then launch the cat off by the midbody in a firm manner. Repeat typically 3-5 times. Asserted that Alfred enjoys being launched and the following hunt of despair." .
+
+pets:VerbalSettleProtocol a pets:AttentionCessationMethod ;
+    rdfs:label "Verbal settle protocol" ;
+    rdfs:comment "Firmly but lightly push the cat off, settle his body down, and say: dude stay enough of this." .
+
+pets:BeingLaunched a pets:PlayActivity ;
+    rdfs:label "Being launched" ;
+    rdfs:comment "Being firmly launched midbody off a person. Asserted as something Alfred enjoys." .
+
+pets:HuntOfDespair a pets:PlayActivity ;
+    rdfs:label "Hunt of despair" ;
+    rdfs:comment "The chase or hunt that follows being launched. Asserted as something Alfred loves, which is why the launch protocol must be repeated." .
+
+pets:ChristmasTree a owl:Class ;
+    rdfs:label "Christmas tree" ;
+    rdfs:comment "A household Christmas tree that can be climbed." .
+
+pets:CatTreePole a owl:Class ;
+    rdfs:label "Cat-tree pole" ;
+    rdfs:comment "The vertical pole of a cat tree, used for climbing or swinging." .
+
+pets:Vader a pets:Dog, pets:FlatCoatedRetriever ;
+    rdfs:label "Vader" ;
+    rdfs:comment "A specific 5-year-old Flat-Coated Retriever. Fun, loving, and energetic. Loves people immediately. Sketched out by large vehicles. Nervous around other dogs: unsure how to act or how they will react; cautious until comfortable, still observantly anxious. Loves walks and running around the backyard. Loves being called a handsome boy. Loves lying in the backyard getting belly rubs. Lives for treats and wet food. Prefers to be fed around 6pm and will bark endlessly if food is not getting ready then. Not aggressive. Unaware of how large he is. Brings toys (favorite: short round Halloween cat) when he wants to go outside." ;
+    pets:hasAgeInYears 5 ;
+    pets:hasTemperament pets:Fun, pets:Loving, pets:Energetic, pets:LovesPeopleImmediately, pets:NotAggressive, pets:UnawareOfOwnSize, pets:NervousAroundOtherDogs, pets:SketchedOutByLargeVehicles ;
+    pets:isNervousAround pets:LargeVehicles, pets:OtherDogs ;
+    pets:hasMaximumWarmUpHours 0 ;
+    pets:hasPreferredFeedingHour 18 ;
+    pets:hasFavoredTreat pets:HouseholdTreats ;
+    pets:hasFavoredFood pets:HouseholdWetFood ;
+    pets:hasPrimaryMotivation pets:HouseholdTreats, pets:HouseholdWetFood ;
+    pets:requestsMealUsing pets:Vocalizing ;
+    pets:requestsGoingOutsideUsing pets:BringingToyToGoOutside ;
+    pets:hasFavoriteToy pets:HalloweenCatToy ;
+    pets:enjoysPlayActivity pets:Walking, pets:BackyardRunning, pets:BackyardBellyRubs ;
+    pets:solicitsAffectionUsing pets:Vocalizing, pets:Nudging, pets:Pawing, pets:Following, pets:OccupyingLap, pets:PresentingBelly, pets:SittingClose ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:PreferredSpotScratch, pets:OfferingTreat, pets:OccupyingLap, pets:Leaning, pets:CalledHandsomeBoy, pets:VigorousBellyRub ;
+    pets:hasAntiBid pets:ReachingForFoodMidMeal, pets:CatsNearFood, pets:BeingPickedUp ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach .
+
+pets:Alfred a pets:Cat ;
+    rdfs:label "Alfred" ;
+    rdfs:comment "A specific 10-year-old male orange cat. Overtly affectionate to the point that a person needs a protocol to stop demanded pets. If given a lot of affection and stopped before he is ready, he claws and bites, heavies his body, resists moving, and desperately claws at the person. Proper protocol: gently unhook claws from fabrics and launch via midbody firmly; he enjoys being launched and the hunt of despair, so this typically takes 3-5 times. Alternative: firmly but lightly push him off, settle his body, and say dude stay enough of this." ;
+    pets:hasCoatColor pets:Orange ;
+    pets:hasSex pets:Male ;
+    pets:hasAgeInYears 10 ;
+    pets:hasTemperament pets:OvertlyAffectionate, pets:DemandingOfPets ;
+    pets:solicitsAffectionUsing pets:Vocalizing, pets:Nudging, pets:Pawing, pets:GentleBiting, pets:SittingClose, pets:Clawing, pets:Circling, pets:OccupyingLap, pets:Following, pets:DirectGaze, pets:SlowBlink, pets:Leaning, pets:HeavyingBody, pets:ResistingDisplacement, pets:DesperateClawing ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:OccupyingLap, pets:PreferredSpotScratch ;
+    pets:hasAntiBid pets:AffectionWithdrawnEarly ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:escalatesWhenAffectionWithdrawnEarly pets:Clawing, pets:GentleBiting, pets:HeavyingBody, pets:ResistingDisplacement, pets:DesperateClawing ;
+    pets:stopsDemandingAttentionVia pets:MidbodyLaunchProtocol, pets:VerbalSettleProtocol ;
+    pets:hasCessationRepetitionsMin 3 ;
+    pets:hasCessationRepetitionsMax 5 ;
+    pets:enjoysPlayActivity pets:BeingLaunched, pets:HuntOfDespair .
+
+pets:Salem a pets:Cat ;
+    rdfs:label "Salem" ;
+    rdfs:comment "A specific female cat, five years old, with black coat color. She readily presents her belly. She loves vigorous belly rubs and light chin and cheek scratches. She is warm and affectionate when she comes out of her bat cave. Biggest motivations are the feather wand toy and Temptations treats. She can be found scaling Christmas trees and loves swinging around the cat-tree pole. She typically needs at least six hours to warm up to people unless a tub of Temptations is shaken. Bids include sprawling on a person's lap." ;
+    pets:hasCoatColor pets:Black ;
+    pets:hasSex pets:Female ;
+    pets:hasAgeInYears 5 ;
+    pets:hasMinimumWarmUpHours 6 ;
+    pets:hasFavoredTreat pets:TemptationsTreat ;
+    pets:hasFavoriteToy pets:FeatherWandToy ;
+    pets:hasPrimaryMotivation pets:FeatherWandToy, pets:TemptationsTreat ;
+    pets:hasRetreat pets:SalemsBatCave ;
+    pets:isAffectionateUponLeaving pets:SalemsBatCave ;
+    pets:acceleratesWarmUpUsing pets:ShakingTreatTub ;
+    pets:solicitsAffectionUsing pets:Vocalizing, pets:SittingClose, pets:SlowBlink, pets:DirectGaze, pets:PresentingBelly, pets:OccupyingLap, pets:Nudging, pets:SprawlingOnLap ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:PreferredSpotScratch, pets:VigorousPetting, pets:VigorousBellyRub, pets:LightChinScratch, pets:LightCheekScratch, pets:OfferingTreat, pets:SlowBlink, pets:OccupyingLap, pets:ShakingTreatTub ;
+    pets:hasAntiBid pets:ApproachingDuringWarmUp ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach ;
+    pets:enjoysPlayActivity pets:ScalingChristmasTrees, pets:SwingingOnCatTreePole .
+
+pets:Stevie a pets:Cat ;
+    rdfs:label "Stevie" ;
+    rdfs:comment "A specific female cat, five years old, with a cow-cat (black-and-white bicolor) pattern. Extremely shy with strangers. Energetic and playful. She loves her feather wand and drags it to a person when she wants to play. She loves Temptations treats and Aussie wet food. Fleece is her favorite fabric; she is more inclined to be affectionate if a fleece blanket or robe is handy." ;
+    pets:hasCoatPattern pets:CowPattern ;
+    pets:hasCoatColor pets:Black, pets:White ;
+    pets:hasSex pets:Female ;
+    pets:hasAgeInYears 5 ;
+    pets:hasTemperament pets:ExtremelyShyWithStrangers, pets:Energetic, pets:Playful ;
+    pets:hasFavoredTreat pets:TemptationsTreat ;
+    pets:hasFavoredFood pets:AussieWetFood ;
+    pets:hasFavoriteToy pets:SteviesFeatherWand ;
+    pets:requestsPlayUsing pets:BringingToyToPlay ;
+    pets:hasFavoriteFabric pets:Fleece ;
+    pets:increasesAffectionWhenPresent pets:FleeceBlanket, pets:FleeceRobe ;
+    pets:solicitsAffectionUsing pets:Vocalizing, pets:Pawing, pets:Nudging, pets:OccupyingLap, pets:DirectGaze, pets:SlowBlink, pets:BringingObject ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:QuietApproach, pets:PreferredSpotScratch, pets:SlowBlink, pets:SittingClose, pets:HavingFleeceHandy, pets:OfferingTreat ;
+    pets:hasAntiBid pets:ForcedApproachWhileShy ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach .
+
+pets:Lilo a pets:Cat ;
+    rdfs:label "Lilo" ;
+    rdfs:comment "A specific female calico cat, around ten years old. Strongly motivated by chicken and Aussie wet food; wet food is her primary affection motivation. Not strongly motivated by Temptations but will accept them. Prefers to sit awkwardly at a distance and head-bonks when she wants pets. Warm-up to strangers is under an hour." ;
+    pets:hasCoatPattern pets:CalicoPattern ;
+    pets:hasSex pets:Female ;
+    pets:hasAgeInYears 10 ;
+    pets:hasMaximumWarmUpHours 1 ;
+    pets:hasFavoredFood pets:Chicken, pets:AussieWetFood ;
+    pets:hasPrimaryMotivation pets:AussieWetFood ;
+    pets:hasLowMotivationFor pets:TemptationsTreat ;
+    pets:willAccept pets:TemptationsTreat ;
+    pets:solicitsAffectionUsing pets:Vocalizing, pets:Nudging, pets:Leaning, pets:SittingAtDistance, pets:HeadBonk ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:QuietApproach, pets:SittingAtDistance, pets:HeadBonk, pets:OfferingTreat ;
+    pets:hasAntiBid pets:CrowdingWhileDistant ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach .
+
+pets:Q a pets:Rabbit, pets:DutchRabbit ;
+    rdfs:label "Q" ;
+    rdfs:comment "A specific 3-year-old male Dutch rabbit. Confident but nervous and shy at first. Does not love being touched unless he invited it. When he wants pets he flops nearby or loafs, makes eye contact, and chitters his teeth. Loves treats and dry food. Loves a sunny windowsill. Not a big fan of stairs. Sometimes upset when Jules blocks him from eating or steals his treats." ;
+    pets:hasSex pets:Male ;
+    pets:hasAgeInYears 3 ;
+    pets:hasTemperament pets:Confident, pets:ShyAtFirst, pets:RequiresConsentForTouch ;
+    pets:isNervousAround pets:Stairs ;
+    pets:enjoysPlace pets:SunnyWindowsill ;
+    pets:hasFavoredTreat pets:HouseholdTreats ;
+    pets:hasFavoredFood pets:DryFood ;
+    pets:hasPrimaryMotivation pets:HouseholdTreats, pets:DryFood ;
+    pets:solicitsAffectionUsing pets:Nudging, pets:Circling, pets:SittingClose, pets:Pawing, pets:Flopping, pets:Loafing, pets:DirectGaze, pets:TeethChittering ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:QuietApproach, pets:OfferingTreat, pets:SittingClose, pets:Flopping, pets:Loafing, pets:DirectGaze, pets:TeethChittering ;
+    pets:hasAntiBid pets:UninvitedTouch, pets:BeingPickedUp, pets:BeingScruffed ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:pickupPermittedWhen pets:VetEmergency ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach ;
+    pets:isSometimesUpsetBy pets:Jules .
+
+pets:Jules a pets:Rabbit, pets:RexRabbit ;
+    rdfs:label "Jules" ;
+    rdfs:comment "A specific 2-year-old female Rex rabbit. Affectionate, warm, and hungry. Primarily food motivated; loves to eat. Will try to block Q from eating and steal his treats; Q is sometimes upset by this. Most content with her feet sticking out. Loves rubs on her head, neck, and shoulder, and gentle kneading on her back and side belly." ;
+    pets:hasSex pets:Female ;
+    pets:hasAgeInYears 2 ;
+    pets:hasTemperament pets:Affectionate, pets:Warm, pets:Hungry, pets:PrimarilyFoodMotivated ;
+    pets:hasFavoredTreat pets:HouseholdTreats ;
+    pets:hasFavoredFood pets:DryFood ;
+    pets:hasPrimaryMotivation pets:HouseholdTreats, pets:DryFood ;
+    pets:blocksFromEating pets:Q ;
+    pets:stealsTreatsFrom pets:Q ;
+    pets:hasAntiBid pets:FoodBlockingOfCagemate, pets:UninvitedTouch, pets:VentralBellyTouch, pets:BeingPickedUp, pets:BeingScruffed, pets:FeetTuckedMeansStop ;
+    pets:showsWarning pets:TailLash, pets:EarsBack, pets:Freeze, pets:WalkAway, pets:GrowlHiss, pets:OverstimulationBite ;
+    pets:pickupPermittedWhen pets:VetEmergency, pets:SkilledSupportedRabbitHandling ;
+    pets:recoversVia pets:GivingSpace, pets:OfferingTreatAfterProtest, pets:QuietSitNoReach ;
+    pets:solicitsAffectionUsing pets:Nudging, pets:Circling, pets:Flopping, pets:SittingClose, pets:Pawing, pets:Following, pets:FeetStickingOut ;
+    pets:prefersAffectionVia pets:GettingOnTheirLevel, pets:QuietApproach, pets:OfferingTreat, pets:PreferredSpotScratch, pets:SittingClose, pets:ChinPresenting, pets:FeetStickingOut, pets:HeadRub, pets:NeckRub, pets:ShoulderRub, pets:GentleBackKneading, pets:GentleSideBellyKneading .

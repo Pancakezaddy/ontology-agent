@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Household ontology</title>
+  <style>
+    :root {
+      --bg: #1c1917;
+      --panel: #292524;
+      --ink: #fafaf9;
+      --muted: #a8a29e;
+      --accent: #d6d3d1;
+      --bid: #a7f3d0;
+      --anti: #fecaca;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      padding: 1.25rem 1.5rem 0.5rem;
+      border-bottom: 1px solid #44403c;
+    }
+    header h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+    header p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.75rem 1.5rem;
+    }
+    .chips button {
+      font: inherit;
+      font-size: 0.85rem;
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid #57534e;
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      cursor: pointer;
+    }
+    .chips button:hover { border-color: var(--accent); }
+    #log {
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .msg { max-width: 100%; }
+    .msg.user { text-align: right; }
+    .bubble {
+      display: inline-block;
+      text-align: left;
+      white-space: pre-wrap;
+      line-height: 1.45;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      background: var(--panel);
+    }
+    .msg.user .bubble { background: #44403c; }
+    .hits {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: ui-monospace, monospace;
+    }
+    form {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem 1.25rem;
+      background: linear-gradient(transparent, var(--bg) 30%);
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+    form input {
+      flex: 1;
+      font: inherit;
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid #57534e;
+      background: var(--panel);
+      color: var(--ink);
+    }
+    form button {
+      font: inherit;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 0;
+      background: var(--ink);
+      color: var(--bg);
+      cursor: pointer;
+    }
+    .legend { font-size: 0.8rem; color: var(--muted); padding: 0 1.5rem; }
+    .legend span.bid { color: var(--bid); }
+    .legend span.anti { color: var(--anti); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Household ontology</h1>
+    <p>Answers from the pet knowledge base only. Bids vs anti-bids (stop / don’t start / protest).</p>
+  </header>
+  <p class="legend"><span class="bid">Bid</span> = invitation. <span class="anti">Anti-bid</span> = do not treat as a request for more of the same.</p>
+  <div class="chips" id="chips"></div>
+  <div id="log"></div>
+  <form id="f">
+    <input id="q" autocomplete="off" placeholder="How do I pet Jules? What is an anti-bid for Q?" />
+    <button type="submit">Ask</button>
+  </form>
+  <script>
+    const names = ["Vader", "Alfred", "Salem", "Stevie", "Lilo", "Q", "Jules", "anti-bid"];
+    const chips = document.getElementById("chips");
+    const log = document.getElementById("log");
+    const form = document.getElementById("f");
+    const input = document.getElementById("q");
+
+    names.forEach((name) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = name;
+      b.addEventListener("click", () => {
+        input.value = name === "anti-bid"
+          ? "What anti-bids should I respect?"
+          : "Tell me about " + name + " including bids and anti-bids.";
+        form.requestSubmit();
+      });
+      chips.appendChild(b);
+    });
+
+    function add(role, text, hits) {
+      const wrap = document.createElement("div");
+      wrap.className = "msg " + role;
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+      wrap.appendChild(bubble);
+      if (hits && hits.length) {
+        const h = document.createElement("div");
+        h.className = "hits";
+        h.textContent = hits.map((x) => (x.label || "") + " " + (x.id || "")).join(" · ");
+        wrap.appendChild(h);
+      }
+      log.appendChild(wrap);
+      wrap.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+      input.value = "";
+      add("user", message);
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      const data = await res.json();
+      add("bot", data.answer || "No answer", data.hits);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Optional: local Cursor SDK CLI (scripts/ask.py)
+cursor-sdk
